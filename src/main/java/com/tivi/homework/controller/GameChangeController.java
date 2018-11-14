@@ -79,10 +79,10 @@ public class GameChangeController {
         Element user = doc.getElementById("userName");
         Element symbol = doc.getElementById("symbol");
         if (game.isFirstUser()){
-            user.text(gameSession.getSecondUser().getEmail());
+            user.text(gameSession.getFirstUser().getEmail());
             symbol.text("X");
         } else {
-            user.text(gameSession.getFirstUser().getEmail());
+            user.text(gameSession.getSecondUser().getEmail());
             symbol.text("O");
         }
         Element gameLink = doc.getElementById("gameStatus");
