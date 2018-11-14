@@ -1,0 +1,43 @@
+buildscript {
+	ext {
+		springBootVersion = '2.1.0.RELEASE'
+	}
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+	}
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+group = 'com.tivi'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+
+repositories {
+	mavenCentral()
+}
+
+
+dependencies {
+
+	compile('org.springframework.boot:spring-boot-starter-web')
+
+	// MySQL Connector-J
+	compile 'mysql:mysql-connector-java'
+
+	// thymeleaf
+	compile('org.springframework.boot:spring-boot-starter-thymeleaf')
+	// JavaMail API
+	compile('org.springframework.boot:spring-boot-starter-mail')
+
+	//Jsoup
+	compile 'org.jsoup:jsoup:1.11.3'
+	implementation('org.springframework.boot:spring-boot-starter-web')
+	testImplementation('org.springframework.boot:spring-boot-starter-test')
+}

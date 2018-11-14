@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Homepage</title>
+</head>
+<body>
+<div>
+    <form>
+        <table>
+            <tr>
+                <td><h1>Start the game</h1></td>
+            </tr>
+            <tr>
+                <td><h2>First user</h2></td>
+                <td><input type="text" id="firstUser" placeholder="email"></td>
+            </tr>
+            <tr>
+                <td><h2>Second user</h2></td>
+                <td><input type="text" id="secondUser" placeholder="email"></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><button type="submit" id="start" >Start the game</button></td>
+                <td><p id ="submitResult" ></p></td>
+            </tr>
+        </table>
+    </form>
+</div>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#start").click(function (event) {
+            event.preventDefault();
+            ajaxPostStart()
+        });
+    });
+    function ajaxPostStart(){
+        //Prepare form data
+        var formData = {
+            firstUser: $("#firstUser").val(),
+            secondUser: $("#secondUser").val()
+        };
+        $.ajax({
+            type : "POST",
+            contentType : "application/json",
+            url : window.location + "/start",
+            data : JSON.stringify(formData),
+            dataType : 'html',
+            success : function(data){
+                if (data ==="None"){
+                    $("#submitResult").text("First or/and second email is wrong!");
+                    console.log(data);
+                } else if (data === "First") {
+                    $("#submitResult").text("Game started! First player's move!");
+                    console.log(data);
+                } else {
+                    $("#submitResult").text("Game started! Second player's move!");
+                    console.log(data);
+                }
+            },
+            error : function (e) {
+                alert("Error!");
+                console.log("ERROR: ",e);
+            }
+        })
+    }
+</script>
+</html>
