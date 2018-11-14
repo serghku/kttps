@@ -37,19 +37,4 @@ public class StatusController {
         model.addAttribute("row3", gameSession.getGame().toStringHTMLinRows(3));
         return "gameStatus";
     }
-
-    private String convertToHTMLStatus(GameSession gameSession) throws IOException {
-        File reader = new File(GAME_STATUS);
-        Document doc = Jsoup.parse(reader, "UTF-8");
-        //System.out.println(doc.text());
-        int i = 0;
-        for (char symbol : gameSession.getGame().getField()) {
-            Element h = doc.getElementById("p"+i);
-            if (symbol !=' '){
-                h.text(String.valueOf(symbol));
-            }
-            i++;
-        }
-        return String.valueOf(doc);
-    }
 }

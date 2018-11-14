@@ -20,7 +20,7 @@ import java.security.NoSuchAlgorithmException;
 
 import static com.tivi.homework.controller.GameStartRESTController.GAME_EMAIL;
 import static com.tivi.homework.controller.GameStartRESTController.GAME_FINISHED_EMAIL;
-import static com.tivi.homework.controller.GameStartRESTController.herokuURL;
+import static com.tivi.homework.controller.GameStartRESTController.HEROKU_URL;
 
 @Controller
 public class GameChangeController {
@@ -47,11 +47,11 @@ public class GameChangeController {
         game.changePosition(pos);
         gameSession.setHotp(HmacOneTimePasswordGenerator.getGeneratedOneTimePassword());
         if (game.isFinished()){
+
             EmailService.sendMessage(gameSession.getFirstUser().getEmail(), endHTML(gameSession),gameSession);
             EmailService.sendMessage(gameSession.getSecondUser().getEmail(), endHTML(gameSession), gameSession);
             model.addAttribute("response","Game is finished!");
             return "emailResponse";
-
         }
         if (!game.isFirstUser()){
             EmailService.sendMessage(gameSession.getSecondUser().getEmail(), changeHTML(gameSession), gameSession);
@@ -70,23 +70,21 @@ public class GameChangeController {
         for (char symbol : game.getField()){
             Element a =doc.getElementById("p"+i);
             if (symbol == ' '){
-                a.attr("href", herokuURL +"/"+ gameSession.getId()+ "/"+ gameSession.getHotp()+ "/"+i);
+                a.attr("href", HEROKU_URL +"/"+ gameSession.getId()+ "/"+ gameSession.getHotp()+ "/"+i);
             } else {
                 a.text(String.valueOf(symbol));
             }
             i++;
         }
-        Element user = doc.getElementById("userName");
         Element symbol = doc.getElementById("symbol");
         if (game.isFirstUser()){
-            user.text(gameSession.getFirstUser().getEmail());
             symbol.text("X");
         } else {
-            user.text(gameSession.getSecondUser().getEmail());
             symbol.text("O");
         }
+
         Element gameLink = doc.getElementById("gameStatus");
-        gameLink.attr("href", herokuURL+"/"+gameSession.getId());
+        gameLink.attr("href", HEROKU_URL +"/"+gameSession.getId());
         return String.valueOf(doc);
     }
 
@@ -94,7 +92,6 @@ public class GameChangeController {
         Game game = gameSession.getGame();
         File reader = new File(GAME_FINISHED_EMAIL);
         Document doc = Jsoup.parse(reader,"UTF-8");
-        //System.out.println(doc.text());
         int i = 0;
         for (char symbol : game.getField()){
             Element h =doc.getElementById("p"+i);
@@ -103,9 +100,9 @@ public class GameChangeController {
         }
         Element p = doc.getElementById("playerWon");
         if (game.isFirstUser()){
-            p.text(gameSession.getFirstUser().getEmail());
-        } else {
             p.text(gameSession.getSecondUser().getEmail());
+        } else {
+            p.text(gameSession.getFirstUser().getEmail());
         }
         return String.valueOf(doc);
     }

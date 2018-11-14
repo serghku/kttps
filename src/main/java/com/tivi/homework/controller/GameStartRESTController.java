@@ -20,7 +20,8 @@ import java.util.List;
 @RestController
 public class GameStartRESTController {
 
-    protected final static String herokuURL = "https://kttps.herokuapp.com";
+    protected final static String HEROKU_URL = "https://kttps.herokuapp.com";
+    // http://localhost:8080
 
     protected final static String GAME_EMAIL = System.getProperty("user.dir") +
             File.separator + "src" +
@@ -101,24 +102,20 @@ public class GameStartRESTController {
     private String startHTML(GameSession gameSession) throws IOException {
         File reader = new File(GAME_EMAIL);
         Document doc = Jsoup.parse(reader, "UTF-8");
-        //System.out.println(doc.text());
         int i = 0;
         for (char symbol : gameSession.getGame().getField()) {
             Element a = doc.getElementById("p"+i);
-            a.attr("href",herokuURL+"/"+gameSession.getId()+"/"+gameSession.getHotp()+"/"+i);
+            a.attr("href", HEROKU_URL +"/"+gameSession.getId()+"/"+gameSession.getHotp()+"/"+i);
             i++;
         }
-        Element user = doc.getElementById("userName");
         Element symbol = doc.getElementById("symbol");
         if (gameSession.getGame().isFirstUser()){
-            user.text(gameSession.getSecondUser().getEmail());
             symbol.text("X");
         } else {
-            user.text(gameSession.getFirstUser().getEmail());
             symbol.text("O");
         }
         Element gameLink = doc.getElementById("gameStatus");
-        gameLink.attr("href", herokuURL+"/"+gameSession.getId());
+        gameLink.attr("href", HEROKU_URL +"/"+gameSession.getId());
         return String.valueOf(doc);
     }
 
