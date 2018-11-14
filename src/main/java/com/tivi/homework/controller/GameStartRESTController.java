@@ -20,7 +20,7 @@ import java.util.List;
 @RestController
 public class GameStartRESTController {
 
-    protected final static String herokuURL = "http://localhost:8080";
+    protected final static String herokuURL = "https://kttps.herokuapp.com";
 
     protected final static String GAME_EMAIL = System.getProperty("user.dir") +
             File.separator + "src" +
