@@ -12,7 +12,7 @@
                 <td><h1>Start the game</h1></td>
             </tr>
             <tr>
-                <td><h2>First user</h2></td>
+                <td><h2>First user - invitor</h2></td>
                 <td><input type="text" id="firstUser" placeholder="email"></td>
             </tr>
             <tr>
@@ -45,18 +45,15 @@
         $.ajax({
             type : "POST",
             contentType : "application/json",
-            url : window.location + "/start",
+            url : window.location + "/invite",
             data : JSON.stringify(formData),
             dataType : 'html',
             success : function(data){
                 if (data ==="None"){
                     $("#submitResult").text("First or/and second email is wrong!");
                     console.log(data);
-                } else if (data === "First") {
-                    $("#submitResult").text("Game started! First player's move!");
-                    console.log(data);
                 } else {
-                    $("#submitResult").text("Game started! Second player's move!");
+                    $("#submitResult").text("Invitation was sent");
                     console.log(data);
                 }
             },
@@ -67,4 +64,10 @@
         })
     }
 </script>
+<style>
+    *{
+        font-family: 'DejaVu Sans', Arial, Helvetica, sans-serif;
+        font-weight: normal;
+    }
+</style>
 </html>

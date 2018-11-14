@@ -14,6 +14,7 @@ public class GameSession {
 
     private int hotp;
 
+
     public GameSession(User firstUser, User secondUser, Game game, int hotp) {
         this.id = randomLong();
         this.firstUser = firstUser;
@@ -21,6 +22,8 @@ public class GameSession {
         this.game = game;
         this.hotp = hotp;
     }
+
+
 
     public void setId(Long id) {
         this.id = id;

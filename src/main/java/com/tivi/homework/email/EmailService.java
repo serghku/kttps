@@ -30,7 +30,7 @@ public class EmailService {
         msg.setFrom(new InternetAddress("sergei.student1@gmail.com", false));
 
         msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
-        msg.setSubject("KTTPS game session : "+gameSession.getId());
+        msg.setSubject("KTTT game session : "+gameSession.getId());
         msg.setContent(content, "text/html");
         msg.setSentDate(new Date());
         Transport.send(msg);

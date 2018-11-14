@@ -20,8 +20,9 @@ import java.util.List;
 @RestController
 public class GameStartRESTController {
 
-    protected final static String HEROKU_URL = "https://kttps.herokuapp.com";
+    protected final static String HEROKU_URL = "https://kttts.herokuapp.com";
     // http://localhost:8080
+    // https://kttts.herokuapp.com
 
     protected final static String GAME_EMAIL = System.getProperty("user.dir") +
             File.separator + "src" +
@@ -36,17 +37,37 @@ public class GameStartRESTController {
             File.separator + "resources" +
             File.separator + "templates" +
             File.separator + "gameFinishedEmail.html";
+    protected final static String INVITE_EMAIL = System.getProperty("user.dir") +
+            File.separator + "src" +
+            File.separator + "main" +
+            File.separator + "resources" +
+            File.separator + "templates" +
+            File.separator + "inviteEmail.html";
 
     protected static List<GameSession> gameSessionList = new ArrayList<>();
 
     protected  static List<User> users = new ArrayList<>();
 
+    @PostMapping("/invite")
+    public String invite(@RequestBody StartForm startForm) throws NoSuchAlgorithmException, InvalidKeyException, IOException, MessagingException {
+        GameSession gameSession = initiateSession(startForm);
+        gameSessionList.add(gameSession);
+        try {
+            EmailService.sendMessage(startForm.getSecondUser(), inviteHTML(gameSession), gameSession);
+        } catch (SendFailedException e){
+            startForm.setFirstUser("");
+            startForm.setSecondUser("");
+            return "None";
+        }
+        return "Invitation was sent";
+    }
+
+/*
     @PostMapping("/start")
     public String start(@RequestBody StartForm startForm) throws NoSuchAlgorithmException, InvalidKeyException, MessagingException, IOException {
         System.out.println(startForm);
         GameSession gameSession = initiateSession(startForm);
         gameSessionList.add(gameSession);
-
         try {
             if (gameSession.getGame().isFirstUser()){
                 EmailService.sendMessage(startForm.getFirstUser(),startHTML(gameSession),gameSession);
@@ -63,7 +84,7 @@ public class GameStartRESTController {
         }
         return "Second";
     }
-
+*/
     protected static GameSession findSession(Long id){
         for (GameSession gameSession : gameSessionList){
             if (gameSession.getId().equals(id)){
@@ -98,24 +119,13 @@ public class GameStartRESTController {
         return gameSession;
     }
 
-    //Creating email with links to moves
-    private String startHTML(GameSession gameSession) throws IOException {
-        File reader = new File(GAME_EMAIL);
-        Document doc = Jsoup.parse(reader, "UTF-8");
-        int i = 0;
-        for (char symbol : gameSession.getGame().getField()) {
-            Element a = doc.getElementById("p"+i);
-            a.attr("href", HEROKU_URL +"/"+gameSession.getId()+"/"+gameSession.getHotp()+"/"+i);
-            i++;
-        }
-        Element symbol = doc.getElementById("symbol");
-        if (gameSession.getGame().isFirstUser()){
-            symbol.text("X");
-        } else {
-            symbol.text("O");
-        }
-        Element gameLink = doc.getElementById("gameStatus");
-        gameLink.attr("href", HEROKU_URL +"/"+gameSession.getId());
+    private String inviteHTML(GameSession gameSession) throws IOException {
+        File reader = new File(INVITE_EMAIL);
+        Document doc = Jsoup.parse(reader,"UTF-8");
+        Element userEmail = doc.getElementById("userEmail");
+        Element acceptLink = doc.getElementById("acceptLink");
+        userEmail.text(gameSession.getFirstUser().getEmail());
+        acceptLink.attr("href", HEROKU_URL+"/"+gameSession.getId()+"/"+gameSession.getHotp());
         return String.valueOf(doc);
     }
 
