@@ -79,10 +79,10 @@ public class GameChangeController {
         Element user = doc.getElementById("userName");
         Element symbol = doc.getElementById("symbol");
         if (game.isFirstUser()){
-            user.text(gameSession.getSecondUser().getEmail());
+            user.text(gameSession.getFirstUser().getEmail());
             symbol.text("X");
         } else {
-            user.text(gameSession.getFirstUser().getEmail());
+            user.text(gameSession.getSecondUser().getEmail());
             symbol.text("O");
         }
         Element gameLink = doc.getElementById("gameStatus");
@@ -90,12 +90,17 @@ public class GameChangeController {
         return String.valueOf(doc);
     }
 
-    // Returns finished email
     private String endHTML(GameSession gameSession) throws IOException {
         Game game = gameSession.getGame();
         File reader = new File(GAME_FINISHED_EMAIL);
         Document doc = Jsoup.parse(reader,"UTF-8");
         //System.out.println(doc.text());
+        int i = 0;
+        for (char symbol : game.getField()){
+            Element h =doc.getElementById("p"+i);
+            h.text(String.valueOf(symbol));
+            i++;
+        }
         Element p = doc.getElementById("playerWon");
         if (game.isFirstUser()){
             p.text(gameSession.getSecondUser().getEmail());
